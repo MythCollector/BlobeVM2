@@ -1,12 +1,3 @@
-# ---- BlobeVM install (runs BEFORE everything else) ----
-RUN \
-  echo "**** install base deps + BlobeVM ****" && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends curl ca-certificates && \
-  curl -O https://raw.githubusercontent.com/Blobby-Boi/BlobeVM/main/install.sh && \
-  chmod +x install.sh && \
-  ./install.sh && \
-  rm install.sh
 
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 
