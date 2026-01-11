@@ -12,14 +12,24 @@ ARG DEBIAN_FRONTEND="noninteractive"
 COPY /root/etc/apt/preferences.d/firefox-no-snap /etc/apt/preferences.d/firefox-no-snap
 
 COPY options.json /
-
 COPY /root/ /
 
+# ---- BlobeVM install (runs BEFORE everything else) ----
+RUN \
+  echo "**** install base deps + BlobeVM ****" && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends curl ca-certificates && \
+  curl -O https://raw.githubusercontent.com/Blobby-Boi/BlobeVM/main/install.sh && \
+  chmod +x install.sh && \
+  ./install.sh && \
+  rm install.sh
+
+# ---- Your existing installs ----
 RUN \
   echo "**** install packages ****" && \
   add-apt-repository -y ppa:mozillateam/ppa && \
   apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y firefox jq wget && \
+  apt-get install --no-install-recommends -y firefox jq wget && \
   chmod +x /install-de.sh && \
   /install-de.sh
 
@@ -28,6 +38,7 @@ RUN \
   /installapps.sh && \
   rm /installapps.sh
 
+# ---- cleanup ----
 RUN \
   echo "**** cleanup ****" && \
   apt-get autoclean && \
@@ -36,7 +47,8 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/* \
     /tmp/*
-  
+
 # ports and volumes
 EXPOSE 3000
 VOLUME /config
+
