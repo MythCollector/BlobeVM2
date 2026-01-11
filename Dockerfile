@@ -1,3 +1,13 @@
+# ---- BlobeVM install (runs BEFORE everything else) ----
+RUN \
+  echo "**** install base deps + BlobeVM ****" && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends curl ca-certificates && \
+  curl -O https://raw.githubusercontent.com/Blobby-Boi/BlobeVM/main/install.sh && \
+  chmod +x install.sh && \
+  ./install.sh && \
+  rm install.sh
+
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 
 # set version label
@@ -14,15 +24,7 @@ COPY /root/etc/apt/preferences.d/firefox-no-snap /etc/apt/preferences.d/firefox-
 COPY options.json /
 COPY /root/ /
 
-# ---- BlobeVM install (runs BEFORE everything else) ----
-RUN \
-  echo "**** install base deps + BlobeVM ****" && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends curl ca-certificates && \
-  curl -O https://raw.githubusercontent.com/Blobby-Boi/BlobeVM/main/install.sh && \
-  chmod +x install.sh && \
-  ./install.sh && \
-  rm install.sh
+
 
 # ---- Your existing installs ----
 RUN \
